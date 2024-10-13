@@ -10,19 +10,20 @@ I have decided to create a script for generating all the necessary stl files all
 
 ## The base implementation
 
-The user gives width and length of their equivalnt of aquarium, along with some other parameters. This will be significantly clearer once I add pictures showcasing the features the parameters affect.
+The user gives width and length of their equivalent of aquarium, along with some other parameters. This will be significantly clearer once I add pictures showcasing the features the parameters affect.
 
 - [x] Generate grid
-  - [ ] Lift edges (p)
+  - [x] Lift edges (p)
 - [x] Generate platform
   - [x] Move corners (p)
   - [x] Move "arms" (p)
   - [x] Round corners (p)
   - [x] edge height (p)
+- [ ] Margins
 
 ## Advanced ideas
 
-- [ ] Margins
+- [ ] Generate test prints
 - [ ] Custom plant holders
 - [ ] Custom container shape
 
