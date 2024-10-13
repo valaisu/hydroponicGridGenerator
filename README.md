@@ -12,13 +12,13 @@ I have decided to create a script for generating all the necessary stl files all
 
 The user gives width and length of their equivalnt of aquarium, along with some other parameters. This will be significantly clearer once I add pictures showcasing the features the parameters affect.
 
-- [ ] Generate grid
+- [x] Generate grid
   - [ ] Lift edges (p)
-- [ ] Generate platform
+- [x] Generate platform
   - [x] Move corners (p)
   - [x] Move "arms" (p)
   - [ ] Round corners (p)
-  - [ ] edge height (p)
+  - [x] edge height (p)
 
 ## Advanced ideas
 
