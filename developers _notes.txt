@@ -1,5 +1,6 @@
 The purpose of this file is to gather my miscellaneous thoughts that
-might some day benefit someone
+might some day benefit someone. I should probably later make a summary of these.
+
 
 
 My printer is Prusa mk4, with a .40 mm nozzle. The files have been created 
@@ -21,6 +22,10 @@ The margins are a bit of a mystery for me. I have to test them once I
 have the feature "generate test print". But even then, it might be correct
 only for my printer
 
+Margins 
+They currently are in places where two printed parts meet in xy directions
+This means between platforms and between supports
+
 
 Custom plant holder
 If you know your way around blender a bit, you can edit Modular_platform.blend
@@ -34,8 +39,11 @@ lot of "warnings" and really small memory leaks. For what I have tested,
 these complications seem innocuous. 
 
 
-
-
+Materials
+First of all, I would recommend using food grade printing materials, if
+possible. Specifically PLA and PETG. PLA is easy to print, cheap, usually
+bio-degradable, durable etc. But, it does not stand the test of time in
+water. The parts that will be in water, should be printed with PETG. 
 
 
 

@@ -19,8 +19,10 @@ The user gives width and length of their equivalent of aquarium, along with some
   - [x] Move "arms" (p)
   - [x] Round corners (p)
   - [x] edge height (p)
-- [ ] Margins
+- [x] Margins
 - [ ] Calculate print counts
+- [ ] Add "build up" pieces (.blend/stl)
+- [ ] Add pots (.blend/stl)
 
 ## Improve usability
 - [ ] GUI
