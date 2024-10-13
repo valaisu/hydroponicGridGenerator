@@ -21,20 +21,22 @@ MAX_PLATFORM_SIZE = 20
 PLATFORM_NAME = "platform"
 PLATFORM_PATH = "models_4.0/ModularPlatform.blend"
 SUPPORT_PATH = "models_4.0/Supports.blend"
-SAVE_TO = "output/platform_ready.blend"
+SAVE_TO = "output/platform_middle.blend"
 
 
 PLATFORM_CORNER_VERT_GROUPS = ["RU", "LU", "RD", "LD"]
+PLATFORM_EDGE_VERT_GROUPS = ["U", "R", "D", "L"]
 PLATFORM_ARM_VERT_GROUPS = ["RUarm", "LUarm", "RDarm", "LDarm"]
 PLATFORM_EDGE_VERT_GROUP = "Edges"
 MOVE_INSTRUCTIONS_CORNER = {"RU" : (1, 1, 0), "LU" : (-1, 1, 0), "RD" : (1, -1, 0), "LD" : (-1, -1, 0)}
 MOVE_INSTRUCTIONS_ARM = {"RUarm" : (1, 1, 0), "LUarm" : (-1, 1, 0), "RDarm" : (1, -1, 0), "LDarm" : (-1, -1, 0)}
+MOVE_INSTRUCTIONS_EDGE = {"U" : (0, 1, 0), "R" : (1, 0, 0), "D" : (0, -1, 0), "L" : (-1, 0, 0)}
 
 CONNECTOR_VERT_GROUPS = ["FemaleHead", "MaleHead", "FlatHead"]
 CONNECTOR_OBJECT = ["ConnectorFemale", "ConnectorMale", "ConnectorFlat"]
 
 
-def get_max_boolean(arm_loc, corner_loc):
+def get_max_bevel(arm_loc, corner_loc):
     return corner_loc - arm_loc
 
 
@@ -60,7 +62,7 @@ def calc_grid_dim_limits(x, y):
     return x_size, y_size, x_amount, y_amount
 
 
-def edit_platforms(x_size, y_size, height):
+def edit_platforms(x_size, y_size, height, bevel_height, bevel_count):
 
     x_move_corners = (x_size - BASE_PLATFORM_SIZE) / 2
     y_move_corners = (y_size - BASE_PLATFORM_SIZE) / 2
@@ -72,7 +74,11 @@ def edit_platforms(x_size, y_size, height):
     for name in PLATFORM_CORNER_VERT_GROUPS:
         instr = tuple(a*b for a, b in zip(move_instruction_multipliers, MOVE_INSTRUCTIONS_CORNER[name]))
         move_vertices(PLATFORM_NAME, [name], instr)
-
+    # move sides
+    for name in PLATFORM_EDGE_VERT_GROUPS:
+        instr = tuple(a*b for a, b in zip(move_instruction_multipliers, MOVE_INSTRUCTIONS_EDGE[name]))
+        move_vertices(PLATFORM_NAME, [name], instr)
+    
     # move arms
     corner_loc_x = CORNER_BASE_LOC + x_move_corners
     corner_loc_y = CORNER_BASE_LOC + y_move_corners
@@ -90,9 +96,15 @@ def edit_platforms(x_size, y_size, height):
     # save base piece
     bpy.ops.wm.save_as_mainfile(filepath=SAVE_TO)
 
-    # Generate corners (use mirrors?)
+    # the file is still open
     # Note: diagonally opposite corners are identical
+    # LU/RD corner:
+    bevel_vertex_group_edges(PLATFORM_NAME, ["RU"], bevel_height, bevel_count)
+    bpy.ops.wm.save_as_mainfile(filepath="output/platform_corner_LU_RD.blend")
 
+    # LD/RU corner:
+    mirror(PLATFORM_NAME, [True, False, False])  # mirror along x
+    bpy.ops.wm.save_as_mainfile(filepath="output/platform_corner_LD_RU.blend")
 
     return arm_loc_x, arm_loc_y
 
@@ -146,8 +158,7 @@ def edit_supports(arm_loc_x, arm_loc_y, corner_loc_x, corner_loc_y):
 
 
 def create_support(parts: list[str], lengths: list[float], save_file):
-    # parts, lengths = [up, right, down, left]
-    #                         ConnectorFemale
+    # parts, lengths = list[up, right, down, left]
     part_names = {"Female" : "ConnectorFemale", "Male" : "ConnectorMale", "Flat" : "ConnectorFlat"}
     
     bpy.ops.wm.open_mainfile(filepath=SUPPORT_PATH)
@@ -179,9 +190,11 @@ def main():
     x, y = ask_container_size()
     x_size, y_size, x_amount, y_amount = calc_grid_dim_limits(x, y)
     height = float(input(" Desired edge height: "))
+    bevel_height = float(input(" Desired bevel height: "))
+    bevel_count = int(input(" Desired bevel count: "))
     print(f" Creating platforms of size {x_size:.2f}cm *{y_size:.2f}cm \n Amount to be printed: {x_amount} * {y_amount} = {x_amount*y_amount}")
-    arm_loc_x, arm_loc_y =  edit_platforms(x_size, y_size, height)
-    #edit_platforms(15, 15)
+    arm_loc_x, arm_loc_y =  edit_platforms(x_size, y_size, height, bevel_height, bevel_count)
+    #edit_platforms(15, 15, 1, 1)
     corner_loc_x = x_size/2
     corner_loc_y = y_size/2
     edit_supports(arm_loc_x, arm_loc_y, corner_loc_x, corner_loc_y)

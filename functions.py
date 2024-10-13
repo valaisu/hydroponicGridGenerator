@@ -1,5 +1,5 @@
 # These functions have been tested to work in blenders scripting 
-# tab, on version 4.2.2 . This does not necessarily mean they work 
+# tab, on version 4.0.0 . This does not necessarily mean they work 
 # outside of Blender, although achieving that is my goal. 
 
 import bpy
@@ -93,6 +93,15 @@ def rotate(object_name: str, degrees: float, axis: str):
     # assemble the new matrix
     object.matrix_world = orig_loc_mat @ rot_mat @ orig_rot_mat @ orig_scale_mat 
     object.select_set(False)
+
+
+# mirror object on selected axis
+def mirror(obj_name: str, axis: tuple[bool, bool, bool]):
+    src_obj = bpy.data.objects[obj_name]
+    bpy.context.view_layer.objects.active = src_obj
+    src_obj.select_set(True)
+
+    bpy.ops.transform.mirror(constraint_axis=axis, orient_type='GLOBAL')
 
 
 def delete(object_name: str):

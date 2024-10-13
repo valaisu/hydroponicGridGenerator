@@ -17,7 +17,7 @@ The user gives width and length of their equivalnt of aquarium, along with some 
 - [x] Generate platform
   - [x] Move corners (p)
   - [x] Move "arms" (p)
-  - [ ] Round corners (p)
+  - [x] Round corners (p)
   - [x] edge height (p)
 
 ## Advanced ideas
