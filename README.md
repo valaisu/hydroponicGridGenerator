@@ -20,12 +20,20 @@ The user gives width and length of their equivalent of aquarium, along with some
   - [x] Round corners (p)
   - [x] edge height (p)
 - [ ] Margins
+- [ ] Calculate print counts
+
+## Improve usability
+- [ ] GUI
+- [ ] Pictures
+- [ ] Installation guide
+- [ ] Installation scripts
 
 ## Advanced ideas
 
 - [ ] Generate test prints
 - [ ] Custom plant holders
 - [ ] Custom container shape
+- [ ] Nozzle size input
 
 
 

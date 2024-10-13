@@ -174,7 +174,7 @@ def create_support(parts: list[str], lengths: list[float], edge_lift, save_file)
         # apply edge lift
         if p == "Flat" and edge_lift:
             if lengths[i] - CONNECTOR_BASE_MID - edge_lift < -1:
-                print("This is potentially bad")
+                print("   This is potentially bad")
             move_vertices(name, ["Middle"], [0, lengths[i] - CONNECTOR_BASE_MID - edge_lift, 0])  # move middle edge_lift-distance away from edge
             move_vertices(name, ["Head"], [0, 0, edge_lift])  # and thus the edge lift has a 45 deg angle, which is stable to print
         
@@ -199,6 +199,7 @@ def main():
     bevel_height = float(input(" Desired bevel height: "))
     edge_lift = float(input(" Desired edge lift: "))
     bevel_count = int(input(" Desired bevel count: "))
+    margin = float(input(" Margin per part "))  # TODO: I don't actually know what is a good margin
 
     print(f" Creating platforms of size {x_size:.2f}cm *{y_size:.2f}cm \n Amount to be printed: {x_amount} * {y_amount} = {x_amount*y_amount}")
     arm_loc_x, arm_loc_y = edit_platforms(x_size, y_size, height, bevel_height, bevel_count)

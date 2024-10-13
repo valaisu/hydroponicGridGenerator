@@ -1,0 +1,41 @@
+The purpose of this file is to gather my miscellaneous thoughts that
+might some day benefit someone
+
+
+My printer is Prusa mk4, with a .40 mm nozzle. The files have been created 
+to work on my printer. For example the edges will be exactly 2 layers thick, 
+which in my opinion is desirable. 
+I have generated my print files using Prusa slicers mode "20mm, Speed". This
+might be especially important with the "build up" pieces, as this print
+setting creates some visible imperfections, in turn making the tolerances 
+perfect for me specifically
+Also the connectors work pretty much perfectly on my machine print settings. 
+
+
+Printing the "build up" pieces has surprisingly had some minor stability
+issues, not seen with any other parts. Probably something to do with the
+overhang
+
+
+The margins are a bit of a mystery for me. I have to test them once I
+have the feature "generate test print". But even then, it might be correct
+only for my printer
+
+
+Custom plant holder
+If you know your way around blender a bit, you can edit Modular_platform.blend
+to make the hole custom shaped. However, note that the file has vertices
+belonging to vertex groups. Be careful to not touch those vertices!
+
+
+The base files in models 4.0 have been generated with blender 4.0.0.
+If one uses 4.2.2, the code should work but you probably will get a 
+lot of "warnings" and really small memory leaks. For what I have tested,
+these complications seem innocuous. 
+
+
+
+
+
+
+
