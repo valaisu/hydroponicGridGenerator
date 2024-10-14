@@ -53,7 +53,6 @@ def bevel_vertex_group_edges(object_name: str, vertex_group_names: list[str], of
     for group_name in vertex_group_names:
         o.vertex_groups.active = o.vertex_groups.get(group_name)
         bpy.ops.object.vertex_group_select()
-        print(group_name)
     
     bpy.ops.mesh.bevel(
         offset = offset,
@@ -105,6 +104,7 @@ def mirror(obj_name: str, axis: tuple[bool, bool, bool]):
 
 
 def delete(object_name: str):
+    bpy.ops.object.select_all(action='DESELECT')
     object = bpy.data.objects[object_name]
     object.select_set(True)  # this is needed here
     bpy.context.view_layer.objects.active = object
