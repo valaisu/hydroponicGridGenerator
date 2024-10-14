@@ -32,7 +32,7 @@ The user gives width and length of their equivalent of aquarium, along with some
 
 ## Advanced ideas
 
-- [ ] Generate test prints
+- [x] Generate test prints
 - [ ] Custom plant holders
 - [ ] Custom container shape
 - [ ] Nozzle size input

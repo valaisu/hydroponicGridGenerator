@@ -14,6 +14,8 @@ CONNECTOR_BASE_START = 1
 CONNECTOR_BASE_MID = 2
 CONNECTOR_BASE_END = 3
 
+TEST_CONNECTOR_SIZE = 6
+
 MIN_PLATFORM_SIZE = 12
 MAX_PLATFORM_SIZE = 20
 
@@ -22,6 +24,8 @@ MAX_PLATFORM_SIZE = 20
 PLATFORM_NAME = "platform"
 PLATFORM_PATH = "models_4.0/ModularPlatform.blend"
 SUPPORT_PATH = "models_4.0/Supports.blend"
+TEST_PATH_X = "models_4.0/test_x.blend"
+TEST_PATH_Y = "models_4.0/test_y.blend"
 SAVE_TO = "output/platform_middle.blend"
 
 
@@ -81,10 +85,10 @@ def edit_platforms(x_size, y_size, height, bevel_height, bevel_count, margin):
         move_vertices(PLATFORM_NAME, [name], instr)
     
     # move arms
-    corner_loc_x = CORNER_BASE_LOC + x_move_corners
-    corner_loc_y = CORNER_BASE_LOC + y_move_corners
-    arm_loc_x = (2 * ARM_MIN_LOC + 1 * corner_loc_x) / 3
-    arm_loc_y = (2 * ARM_MIN_LOC + 1 * corner_loc_y) / 3
+    x_corner_loc = CORNER_BASE_LOC + x_move_corners
+    y_corner_loc = CORNER_BASE_LOC + y_move_corners
+    arm_loc_x = (2 * ARM_MIN_LOC + 1 * x_corner_loc) / 3
+    arm_loc_y = (2 * ARM_MIN_LOC + 1 * y_corner_loc) / 3
 
     arm_move = (arm_loc_x - ARM_BASE_LOC, arm_loc_y - ARM_BASE_LOC, 0)
     for name in PLATFORM_ARM_VERT_GROUPS:
@@ -110,11 +114,11 @@ def edit_platforms(x_size, y_size, height, bevel_height, bevel_count, margin):
     return arm_loc_x, arm_loc_y
 
 
-def edit_supports(arm_loc_x, arm_loc_y, corner_loc_x, corner_loc_y, edge_lift, margin):
+def edit_supports(arm_loc_x, arm_loc_y, x_corner_loc, y_corner_loc, edge_lift, margin):
 
     x_dist_between = arm_loc_x
-    x_dist_to_edge = corner_loc_x - arm_loc_x
-    y_dist_to_edge = corner_loc_y - arm_loc_y
+    x_arm_edge_dist = x_corner_loc - arm_loc_x
+    y_arm_edge_dist = y_corner_loc - arm_loc_y
 
     # The types of parts, clockwise, starting from 12 o clock
     # So 12 and 3 o clock are always female, and 6 and 9 are always male
@@ -133,29 +137,32 @@ def edit_supports(arm_loc_x, arm_loc_y, corner_loc_x, corner_loc_y, edge_lift, m
     # Up to 16 unique pieces are needed
     #  
     # create the middle pieces
-    create_support(middle, [y_dist_to_edge, arm_loc_x, arm_loc_y, x_dist_to_edge], edge_lift, margin, "output/support_mid_LU.blend")  # LU
-    create_support(middle, [y_dist_to_edge, x_dist_to_edge, arm_loc_y, arm_loc_x], edge_lift, margin, "output/support_mid_RU.blend")  # RU
-    create_support(middle, [arm_loc_y, arm_loc_x, y_dist_to_edge, x_dist_to_edge], edge_lift, margin, "output/support_mid_LD.blend")  # LD
-    create_support(middle, [arm_loc_y, x_dist_to_edge, y_dist_to_edge, arm_loc_x], edge_lift, margin, "output/support_mid_RD.blend")  # RD
+    create_support(middle, [y_arm_edge_dist, arm_loc_x, arm_loc_y, x_arm_edge_dist], edge_lift, margin, "output/support_mid_LU.blend")  # LU
+    create_support(middle, [y_arm_edge_dist, x_arm_edge_dist, arm_loc_y, arm_loc_x], edge_lift, margin, "output/support_mid_RU.blend")  # RU
+    create_support(middle, [arm_loc_y, arm_loc_x, y_arm_edge_dist, x_arm_edge_dist], edge_lift, margin, "output/support_mid_LD.blend")  # LD
+    create_support(middle, [arm_loc_y, x_arm_edge_dist, y_arm_edge_dist, arm_loc_x], edge_lift, margin, "output/support_mid_RD.blend")  # RD
     
     # edges
-    create_support(edge_U, [y_dist_to_edge, arm_loc_x, arm_loc_y, x_dist_to_edge], edge_lift, margin, "output/support_edge_U1.blend")
-    create_support(edge_U, [y_dist_to_edge, x_dist_to_edge, arm_loc_y, arm_loc_x], edge_lift, margin, "output/support_edge_U2.blend")
+    create_support(edge_U, [y_arm_edge_dist, arm_loc_x, arm_loc_y, x_arm_edge_dist], edge_lift, margin, "output/support_edge_U1.blend")
+    create_support(edge_U, [y_arm_edge_dist, x_arm_edge_dist, arm_loc_y, arm_loc_x], edge_lift, margin, "output/support_edge_U2.blend")
     
-    create_support(edge_R, [y_dist_to_edge, x_dist_to_edge, arm_loc_y, arm_loc_x], edge_lift, margin, "output/support_edge_R1.blend")
-    create_support(edge_R, [arm_loc_y, x_dist_to_edge, y_dist_to_edge, arm_loc_x], edge_lift, margin, "output/support_edge_R2.blend")
+    create_support(edge_R, [y_arm_edge_dist, x_arm_edge_dist, arm_loc_y, arm_loc_x], edge_lift, margin, "output/support_edge_R1.blend")
+    create_support(edge_R, [arm_loc_y, x_arm_edge_dist, y_arm_edge_dist, arm_loc_x], edge_lift, margin, "output/support_edge_R2.blend")
     
-    create_support(edge_D, [arm_loc_y, arm_loc_x, y_dist_to_edge, x_dist_to_edge], edge_lift, margin, "output/support_edge_D1.blend")
-    create_support(edge_D, [arm_loc_y, x_dist_to_edge, y_dist_to_edge, arm_loc_x], edge_lift, margin, "output/support_edge_D2.blend")
+    create_support(edge_D, [arm_loc_y, arm_loc_x, y_arm_edge_dist, x_arm_edge_dist], edge_lift, margin, "output/support_edge_D1.blend")
+    create_support(edge_D, [arm_loc_y, x_arm_edge_dist, y_arm_edge_dist, arm_loc_x], edge_lift, margin, "output/support_edge_D2.blend")
     
-    create_support(edge_L, [y_dist_to_edge, arm_loc_x, arm_loc_y, x_dist_to_edge], edge_lift, margin, "output/support_edge_L1.blend")
-    create_support(edge_L, [arm_loc_y, arm_loc_x, y_dist_to_edge, x_dist_to_edge], edge_lift, margin, "output/support_edge_L2.blend")
+    create_support(edge_L, [y_arm_edge_dist, arm_loc_x, arm_loc_y, x_arm_edge_dist], edge_lift, margin, "output/support_edge_L1.blend")
+    create_support(edge_L, [arm_loc_y, arm_loc_x, y_arm_edge_dist, x_arm_edge_dist], edge_lift, margin, "output/support_edge_L2.blend")
     
     # corners
-    create_support(corner_LU, [y_dist_to_edge, arm_loc_x, arm_loc_y, x_dist_to_edge], edge_lift, margin, "output/support_corner_LU.blend")  # LU
-    create_support(corner_RU, [y_dist_to_edge, x_dist_to_edge, arm_loc_y, arm_loc_x], edge_lift, margin, "output/support_corner_RU.blend")  # RU
-    create_support(corner_LD, [arm_loc_y, arm_loc_x, y_dist_to_edge, x_dist_to_edge], edge_lift, margin, "output/support_corner_LD.blend")  # LD
-    create_support(corner_RD, [arm_loc_y, x_dist_to_edge, y_dist_to_edge, arm_loc_x], edge_lift, margin, "output/support_corner_RD.blend")  # RD
+    create_support(corner_LU, [y_arm_edge_dist, arm_loc_x, arm_loc_y, x_arm_edge_dist], edge_lift, margin, "output/support_corner_LU.blend")  # LU
+    create_support(corner_RU, [y_arm_edge_dist, x_arm_edge_dist, arm_loc_y, arm_loc_x], edge_lift, margin, "output/support_corner_RU.blend")  # RU
+    create_support(corner_LD, [arm_loc_y, arm_loc_x, y_arm_edge_dist, x_arm_edge_dist], edge_lift, margin, "output/support_corner_LD.blend")  # LD
+    create_support(corner_RD, [arm_loc_y, x_arm_edge_dist, y_arm_edge_dist, arm_loc_x], edge_lift, margin, "output/support_corner_RD.blend")  # RD
+
+    # test prints
+    create_test_prints(x_corner_loc, y_corner_loc, edge_lift, margin, 0, 0) #TODO: fix amounts
 
 
 def create_support(parts: list[str], lengths: list[float], edge_lift, margin, save_file):
@@ -192,27 +199,82 @@ def create_support(parts: list[str], lengths: list[float], edge_lift, margin, sa
     bpy.ops.wm.save_as_mainfile(filepath=save_file)
 
 
-def create_test_prints():
-    # TODO: create specialized blend files for the test prints
-    pass
+def create_test_prints(x_corner_loc, y_corner_loc, edge_lift, margin, x_amount, y_amount):
+
+    create_test_support(True, [False, True], x_corner_loc, edge_lift, margin, "output/test_x_edge_end_1PCS.blend")
+    create_test_support(True, [False, False], x_corner_loc, edge_lift, margin, f"output/test_x_mid_{x_amount}PCS.blend")
+    create_test_support(True, [True, False], x_corner_loc, edge_lift, margin, "output/test_x_edge_start_1PCS.blend")
+    
+    create_test_support(False, [False, False], y_corner_loc, edge_lift, margin, f"output/test_y_mid_{y_amount}PCS.blend")
+    create_test_support(False, [True, False], y_corner_loc, edge_lift, margin, "output/test_y_edge_start_1PCS.blend")
+    create_test_support(False, [False, True], y_corner_loc, edge_lift, margin, "output/test_y_edge_end_1PCS.blend")
+    
+
+
+def create_test_support(dir_is_x: bool, flat: tuple[bool, bool], size, edge_lift, margin, save_file):
+    # dir: x or y
+    move = (1,0,0) if dir_is_x else (0,1,0)
+    path = TEST_PATH_X if dir_is_x else TEST_PATH_Y
+    bpy.ops.wm.open_mainfile(filepath=path)
+    
+    multiplier = size - TEST_CONNECTOR_SIZE  - 2 * margin  # times 2, because two moves are made with one action here
+    multiplier_vec = (multiplier, multiplier, 0)
+    instr = tuple(a*b for a, b in zip(move, multiplier_vec))
+    #print(f" {instr}, {size}")
+
+    # flat: is one of the ends flat
+    if flat[0] or flat[1]:
+        deleted = "ConnectorStart" if flat[0] else "ConnectorEnd"
+        this = "ConnectorEnd" if flat[0] else "ConnectorStart"
+        #print(" ", this, deleted)
+        delete(deleted)
+        delete("ConnectorMid")
+        # correct size
+        move_vertices(this, ["End"], instr)
+        # edge lifts
+        middle_move = (-1 + edge_lift)
+        multiplier_vec = (middle_move, middle_move, 0)
+        instr_el = tuple(a*b for a, b in zip(move, multiplier_vec))
+        move_vertices(this, ["Mid"], instr_el)
+        move_vertices(this, ["Start"], (0, 0, edge_lift))
+
+    else:
+        delete("ConnectorStart")
+        delete("ConnectorEnd")
+        move_vertices("ConnectorMid", ["End"], instr)
+        
+    bpy.ops.wm.save_as_mainfile(filepath=save_file)
+    #bpy.ops.wm.read_factory_settings(use_empty=True)
+    #bpy.ops.wm.quit_blender() # close without saving
+
+
+# oh it was this simple
+def calculate_print_counts(x, y):
+    corners = 2 # two unique corners
+    L_R_edges = y-1 # two unique
+    D_U_edges = x-1 # two unique
+    middles = (x-1) * (y-1) # four uniques
+
 
 
 def main():
 
-    x, y = ask_container_size()
-    x_size, y_size, x_amount, y_amount = calc_grid_dim_limits(x, y)
-    height = float(input(" Desired edge height: "))
-    bevel_height = float(input(" Desired bevel height: "))
-    edge_lift = float(input(" Desired edge lift: "))
-    bevel_count = int(input(" Desired bevel count: "))
-    margin = float(input(" Margin per part "))  # TODO: I don't actually know what is a good margin
+    #x, y = ask_container_size()
+    #x_size, y_size, x_amount, y_amount = calc_grid_dim_limits(x, y)
+    #height = float(input(" Desired edge height: "))
+    #bevel_height = float(input(" Desired bevel height: "))
+    #edge_lift = float(input(" Desired edge lift: "))
+    #bevel_count = int(input(" Desired bevel count: "))
+    #margin = float(input(" Margin per part "))  # TODO: I don't actually know what is a good margin
+
+    x_size, y_size, height, bevel_height, bevel_count, margin, x_amount, y_amount, edge_lift = 17.5, 20.0, 2, 1, 10, 0.01, 4, 2, 1.5
 
     print(f" Creating platforms of size {x_size:.2f}cm *{y_size:.2f}cm \n Amount to be printed: {x_amount} * {y_amount} = {x_amount*y_amount}")
     arm_loc_x, arm_loc_y = edit_platforms(x_size, y_size, height, bevel_height, bevel_count, margin)
     #edit_platforms(15, 15, 1, 1)
-    corner_loc_x = x_size/2
-    corner_loc_y = y_size/2
-    edit_supports(arm_loc_x, arm_loc_y, corner_loc_x, corner_loc_y, edge_lift, margin)
+    x_corner_loc = x_size/2
+    y_corner_loc = y_size/2
+    edit_supports(arm_loc_x, arm_loc_y, x_corner_loc, y_corner_loc, edge_lift, margin)
     return 0
 
 
