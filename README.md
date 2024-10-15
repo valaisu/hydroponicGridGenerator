@@ -12,6 +12,8 @@ I have decided to create a script for generating all the necessary stl files all
 
 The user gives width and length of their equivalent of aquarium, along with some other parameters. This will be significantly clearer once I add pictures showcasing the features the parameters affect.
 
+### Features
+
 - [x] Generate grid
   - [x] Lift edges (p)
 - [x] Generate platform
@@ -20,17 +22,20 @@ The user gives width and length of their equivalent of aquarium, along with some
   - [x] Round corners (p)
   - [x] edge height (p)
 - [x] Margins
-- [ ] Calculate print counts
+- [x] Calculate print counts
 - [ ] Add "build up" pieces (.blend/stl)
 - [ ] Add pots (.blend/stl)
+- [x] Scale the end models
 
-## Improve usability
+### Improve usability
 - [ ] GUI
 - [ ] Pictures
 - [ ] Installation guide
 - [ ] Installation scripts
+- [x] Export as stl
+- [ ] Better file management
 
-## Advanced ideas
+### Advanced ideas
 
 - [x] Generate test prints
 - [ ] Custom plant holders

@@ -31,6 +31,8 @@ Custom plant holder
 If you know your way around blender a bit, you can edit Modular_platform.blend
 to make the hole custom shaped. However, note that the file has vertices
 belonging to vertex groups. Be careful to not touch those vertices!
+TODO: write a script that in blender selects all vertices belonging to
+vertex groups
 
 
 The base files in models 4.0 have been generated with blender 4.0.0.

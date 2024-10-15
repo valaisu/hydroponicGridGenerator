@@ -103,6 +103,19 @@ def mirror(obj_name: str, axis: tuple[bool, bool, bool]):
     bpy.ops.transform.mirror(constraint_axis=axis, orient_type='GLOBAL')
 
 
+def scale_all(factor: float):
+    bpy.context.view_layer.objects.active = bpy.data.objects[0]  # otherwise might not have an active -> errors
+    bpy.ops.object.mode_set(mode='OBJECT')
+    bpy.ops.object.select_all(action='SELECT')
+    bpy.ops.transform.resize(value=(factor, factor, factor))
+
+
+def export(file_path: str):
+    bpy.ops.object.mode_set(mode='OBJECT')
+    bpy.ops.object.select_all(action='SELECT')
+    bpy.ops.export_mesh.stl(filepath=file_path)
+
+
 def delete(object_name: str):
     bpy.ops.object.select_all(action='DESELECT')
     object = bpy.data.objects[object_name]
