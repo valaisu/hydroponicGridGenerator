@@ -11,6 +11,22 @@ BG_WHITE = "#D9D9D9"
 BG_GREEN = "#7EC27F"
 
 
+BASE_PLATFORM_SIZE = 12
+ARM_BASE_LOC = 5
+ARM_MIN_LOC = 3.5
+CORNER_BASE_LOC = 6
+EDGE_BASE_HEIGHT = 1
+
+CONNECTOR_BASE_START = 1
+CONNECTOR_BASE_MID = 2
+CONNECTOR_BASE_END = 3
+
+TEST_CONNECTOR_SIZE = 6
+
+MIN_PLATFORM_SIZE = 12
+MAX_PLATFORM_SIZE = 20
+
+
 def round_rectangle(x1, y1, x2, y2, radius=25, **kwargs):
         
     points = [x1+radius, y1, x1+radius, y1, x2-radius, y1, x2-radius, y1, x2, y1, 
@@ -50,7 +66,16 @@ def rectangular_button(x1, y1, x2, y2, text, command, radius=0, **kwargs):
 
 
 def click():
-    print("Click")
+    print(entry5.get())
+    #print("Click")
+
+
+def generate_files():
+    if not check_value_consistency():
+        print("the numbers not ok")
+        return
+    print("Success!")
+
 
 
 def add_placeholder(entry, placeholder_text):
@@ -88,6 +113,7 @@ def create_text_input_unit(x, y, text, placeholder, on_click_function):
 
     # question mark
     circular_button(x+230, y+36, 13, "?", on_click_function)
+    return entry
 
 
 def create_double_text_input_unit(x, y, text, placeholder1, placeholder2, on_click_function):
@@ -106,6 +132,7 @@ def create_double_text_input_unit(x, y, text, placeholder1, placeholder2, on_cli
 
     # question mark
     circular_button(x+230, y+36, 13, "?", on_click_function)
+    return entry1, entry2
 
 
 def create_slider(x, y):
@@ -133,22 +160,78 @@ info_box_shadow = round_rectangle(460, 100, 910, 740, radius=20, fill=DARK_GREEN
 info_box = round_rectangle(500, 60, 950, 700, radius=20, fill=LIGHT_GREEN)
 
 # Inputs and buttons
-create_double_text_input_unit(130, 90, "Bevel size", "x", "y", click)
-create_double_text_input_unit(130, 90 + 60, "Bevel size", "x", "y", click)
+entry1, entry2 = create_double_text_input_unit(130, 90, "Container size", "x", "y", click)
+entry3, entry4 = create_double_text_input_unit(130, 90 + 60, "Platform amount", "x", "y", click)
 
-create_text_input_unit(130, 90 + 120, "Edge height (cm)", "", click)
-create_text_input_unit(130, 90 + 180, "Bevel size (cm)", "", click)
-create_text_input_unit(130, 90 + 240, "Bevel count", "", click)
-create_text_input_unit(130, 90 + 300, "Connector edge lift (cm)", "", click)
-create_text_input_unit(130, 90 + 360, "Margins (cm)", "", click)
-create_text_input_unit(130, 90 + 420, "Model scale", "", click)
+entry5 = create_text_input_unit(130, 90 + 120, "Edge height (cm)", "", click)
+entry6 = create_text_input_unit(130, 90 + 180, "Bevel size (cm)", "", click)
+entry7 = create_text_input_unit(130, 90 + 240, "Bevel count", "", click)
+entry8 = create_text_input_unit(130, 90 + 300, "Connector edge lift (cm)", "", click)
+entry9 = create_text_input_unit(130, 90 + 360, "Margins (cm)", "", click)
+entry10 = create_text_input_unit(130, 90 + 420, "Model scale", "", click)
 
-create_double_text_input_unit(130, 90 + 480, "Bevel size", "x", "y", click)
+entry11, entry12 = create_double_text_input_unit(130, 90 + 480, "Print area dimensions", "x", "y", click)
+
+# make distinction between int and float entries?
+all_entries = [entry1, entry2, entry3, entry4, entry5, entry6, entry7, entry8, entry9, entry10, entry11, entry12]
+int_entries = [entry1, entry2, entry5, entry6, entry8, entry9, entry10, entry11, entry12]
+float_entries = [entry3, entry4, entry7]
 
 # the "submit" button
-rectangular_button(150, 635, 350, 680, "Generate", click, 20, fill=BG_GREEN)
+rectangular_button(150, 635, 350, 680, "Generate", generate_files, 20, fill=BG_GREEN)
 
 # TODO: The info box
+
+
+def check_value_consistency():
+    # calls some other functions
+    if False in check_all_entries_numbers():
+        print(check_all_entries_numbers())
+        return False # we got some problems
+    
+    x_min, x_max, y_min, y_max = get_count_limits(float(entry1.get()), float(entry2.get()))
+    if not (x_min <= int(entry3.get()) <= x_max):
+        return False # problems
+    if not (y_min <= int(entry4.get()) <= y_max):
+        return False # shit hit fan
+
+    if float(entry6.get()) > get_max_bevel():
+        return False # this is not fine
+
+
+    return True
+    # also do something with the 11 and 12
+
+
+def check_all_entries_numbers():
+    # for each entry
+    # takes entry, removes up to 1 ".", checks if rest of chars in 0...9
+    floats = [entry.get().replace(".", "", 1).isnumeric() for entry in float_entries]
+    ints = [entry.get().isnumeric() for entry in int_entries]
+    return floats + ints #[entry.get().replace(".", "", 1).isnumeric() for entry in all_entries]
+            
+
+def get_count_limits(tot_size_x, tot_size_y):
+    x_max = int(round(tot_size_x/MIN_PLATFORM_SIZE - 0.49999))
+    y_max = int(round(tot_size_y/MIN_PLATFORM_SIZE - 0.49999))
+    x_min = int(round(tot_size_x/MAX_PLATFORM_SIZE + 0.50000))
+    y_min = int(round(tot_size_y/MAX_PLATFORM_SIZE + 0.50000))
+    return x_min, x_max, y_min, y_max
+
+
+def get_max_bevel():
+    x_size = float(entry1.get()) / int(entry3.get())
+    y_size = float(entry2.get()) / int(entry4.get())
+    x_move_corners = (x_size - BASE_PLATFORM_SIZE) / 2
+    y_move_corners = (y_size - BASE_PLATFORM_SIZE) / 2
+    x_corner_loc = CORNER_BASE_LOC + x_move_corners
+    y_corner_loc = CORNER_BASE_LOC + y_move_corners
+    arm_loc_x = (2 * ARM_MIN_LOC + 1 * x_corner_loc) / 3
+    arm_loc_y = (2 * ARM_MIN_LOC + 1 * y_corner_loc) / 3
+
+    return min(x_corner_loc - arm_loc_x, y_corner_loc - arm_loc_y)
+    #corner_loc - arm_loc 
+
 
 
 
