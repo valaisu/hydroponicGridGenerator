@@ -75,6 +75,7 @@ def add_placeholder(entry, placeholder_text):
 
     # remove when clicked
     def on_focus_in(event):
+        event.widget.config(fg="black") # color back to black
         if entry.get() == placeholder[0]:
             entry.delete(0, tk.END)
             entry.config(fg="black")
@@ -92,7 +93,7 @@ def add_placeholder(entry, placeholder_text):
     # Function to update the placeholder dynamically
     def update_placeholder(new_text):
         placeholder[0] = new_text
-        if not entry.get().isnumeric(): # if a number, dont override, else:
+        if not entry.get().isnumeric() or entry.cget("fg") == "red": # if a number, dont override, else:
             entry.delete(0, tk.END)
             entry.insert(0, placeholder[0])
             entry.config(fg="grey")
@@ -144,16 +145,20 @@ def create_slider(x, y):
 def check_value_consistency(all_entries, float_entries, int_entries):
     # calls some other functions
     if False in check_all_entries_numbers(float_entries, int_entries):
-        print(check_all_entries_numbers(float_entries, int_entries))
+        all = check_all_entries_numbers(float_entries, int_entries)
+        print(all)
         return False # we got some problems
     
     x_min, x_max, y_min, y_max = get_count_limits(float(all_entries[0].get()), float(all_entries[1].get()))
     if not (x_min <= int(all_entries[2].get()) <= x_max):
+        all_entries[2].config(fg="red")
         return False # problems
     if not (y_min <= int(all_entries[3].get()) <= y_max):
+        all_entries[3].config(fg="red")
         return False # shit hit fan
 
     if float(all_entries[5].get()) > get_max_bevel(all_entries[0], all_entries[1], all_entries[2], all_entries[3]):
+        all_entries[5].config(fg="red")
         return False # this is not fine
 
     return True
@@ -165,6 +170,18 @@ def check_all_entries_numbers(float_entries, int_entries):
     # takes entry, removes up to 1 ".", checks if rest of chars in 0...9
     floats = [entry.get().replace(".", "", 1).isnumeric() for entry in float_entries]
     ints = [entry.get().isnumeric() for entry in int_entries]
+
+    #print([entry.get().isnumeric() for entry in float_entries])
+
+    
+    # highlight with red color
+    for i, entry in enumerate(floats):
+        if not entry:
+            float_entries[i].config(fg="red")
+    for i, entry in enumerate(ints):
+        if not entry:
+            int_entries[i].config(fg="red")
+    
     return floats + ints #[entry.get().replace(".", "", 1).isnumeric() for entry in all_entries]
             
 
@@ -212,15 +229,15 @@ def main():
     info_box_shadow = round_rectangle(canvas, 460, 100, 910, 740, radius=20, fill=DARK_GREEN)
     info_box = round_rectangle(canvas, 500, 60, 950, 700, radius=20, fill=LIGHT_GREEN)
 
-    def new_placeholder():
-        update_func3("kissa")
-        update_func4("kissa")
-
     def update_platform_count_placeholders():
         x_min, x_max, y_min, y_max = get_count_limits(float(entry1.get()), float(entry2.get()))
-        print(x_min, x_max, y_min, y_max)
         update_func3(f"{x_min} - {x_max}")
         update_func4(f"{y_min} - {y_max}")
+        root.focus()
+
+    def update_bevel_size_placeholders():
+        max_bevel = get_max_bevel(entry1, entry2, entry3, entry4)
+        update_func6(f"{0} - {max_bevel:.2f}")
         root.focus()
 
     def click():
@@ -232,7 +249,7 @@ def main():
     entry3, entry4, update_func3, update_func4 = create_double_text_input_unit(root, canvas, 130, 90 + 60, "Platform amount", "x", "y", update_platform_count_placeholders)
 
     entry5, update_func5 = create_text_input_unit(root, canvas, 130, 90 + 120, "Edge height (cm)", "", click)
-    entry6, update_func6 = create_text_input_unit(root, canvas, 130, 90 + 180, "Bevel size (cm)", "", click)
+    entry6, update_func6 = create_text_input_unit(root, canvas, 130, 90 + 180, "Bevel size (cm)", "", update_bevel_size_placeholders)
     entry7, update_func7 = create_text_input_unit(root, canvas, 130, 90 + 240, "Bevel count", "", click)
     entry8, update_func8 = create_text_input_unit(root, canvas, 130, 90 + 300, "Connector edge lift (cm)", "", click)
     entry9, update_func9 = create_text_input_unit(root, canvas, 130, 90 + 360, "Margins (cm)", "", click)
@@ -242,8 +259,8 @@ def main():
 
     # make distinction between int and float entries?
     all_entries = [entry1, entry2, entry3, entry4, entry5, entry6, entry7, entry8, entry9, entry10, entry11, entry12]
-    int_entries = [entry1, entry2, entry5, entry6, entry8, entry9, entry10, entry11, entry12]
-    float_entries = [entry3, entry4, entry7]
+    float_entries = [entry1, entry2, entry5, entry7, entry8, entry9, entry10, entry11, entry12]
+    int_entries = [entry3, entry4, entry7]
 
     def generate_files():
         if not check_value_consistency(all_entries, float_entries, int_entries):
