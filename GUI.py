@@ -1,7 +1,6 @@
 import tkinter as tk
 from tkinter import ttk
-from PIL import Image, ImageTk
-
+from PIL import Image, ImageTk, ImageDraw
 # TODO: make this file importable
 
 LIGHT_GREEN = "#91CF99"
@@ -25,6 +24,12 @@ TEST_CONNECTOR_SIZE = 6
 
 MIN_PLATFORM_SIZE = 12
 MAX_PLATFORM_SIZE = 20
+
+IMAGE_PATHS = ["pictures/Platform_count_visualization.png",
+               "pictures/Edge_lift_visualization.png", 
+               "pictures/Container_size_visualization.png", 
+               "pictures/Bevel_visualization.png", 
+               "pictures/Bevel_count_illustration.png"]
 
 
 def round_rectangle(canvas, x1, y1, x2, y2, radius=25, **kwargs):
@@ -206,7 +211,20 @@ def get_max_bevel(entry1, entry2, entry3, entry4):
     return min(x_corner_loc - arm_loc_x, y_corner_loc - arm_loc_y)
     #corner_loc - arm_loc 
 
+def round_corners(image, radius, background_color):
 
+    rounded_image = Image.new("RGBA", image.size, background_color)
+    
+    mask = Image.new("L", image.size, 0)
+    draw = ImageDraw.Draw(mask)
+    draw.rounded_rectangle((0, 0) + image.size, radius=radius, fill=255)
+    
+    rounded_image.paste(image, (0, 0), mask=mask)
+    return rounded_image
+
+def hex_to_rgba(hex_color, alpha=255):
+    hex_color = hex_color.lstrip('#')
+    return tuple(int(hex_color[i:i+2], 16) for i in (0, 2, 4)) + (alpha,)
 
 
 def main():
@@ -220,6 +238,9 @@ def main():
     canvas = tk.Canvas(root, width=1000, height=800)
     canvas.pack()
 
+    # info box
+    image_label = tk.Label(root)
+
     # Boxes
     canvas.create_polygon(0, 0, 0, 800, 1000, 800, fill=BG_GREEN)
 
@@ -229,33 +250,48 @@ def main():
     info_box_shadow = round_rectangle(canvas, 460, 100, 910, 740, radius=20, fill=DARK_GREEN)
     info_box = round_rectangle(canvas, 500, 60, 950, 700, radius=20, fill=LIGHT_GREEN)
 
-    def update_platform_count_placeholders():
+    def click(img_path = ""):
+        if img_path != "":
+            update_image(img_path)
+        root.focus()
+        #print("Click")
+
+    def update_platform_count_placeholders(img_path = ""):
+        if img_path != "":
+            update_image(img_path)
         x_min, x_max, y_min, y_max = get_count_limits(float(entry1.get()), float(entry2.get()))
         update_func3(f"{x_min} - {x_max}")
         update_func4(f"{y_min} - {y_max}")
         root.focus()
 
-    def update_bevel_size_placeholders():
+    def update_bevel_size_placeholders(img_path = ""):
+        if img_path != "":
+            click(img_path)
         max_bevel = get_max_bevel(entry1, entry2, entry3, entry4)
         update_func6(f"{0} - {max_bevel:.2f}")
         root.focus()
-
-    def click():
-        root.focus()
-        #print("Click")
+    
+    def update_image(path):
+        image = Image.open(path)
+        image = image.resize((350, 250)) 
+        image = round_corners(image, 30, hex_to_rgba(LIGHT_GREEN))
+        tk_image = ImageTk.PhotoImage(image)
+        image_label.config(image=tk_image)
+        image_label.image = tk_image
+        image_label.place(x=550, y=160)
 
     # Inputs and buttons
-    entry1, entry2, update_func1, update_func2 = create_double_text_input_unit(root, canvas, 130, 90, "Container size", "x", "y", click)
-    entry3, entry4, update_func3, update_func4 = create_double_text_input_unit(root, canvas, 130, 90 + 60, "Platform amount", "x", "y", update_platform_count_placeholders)
+    entry1, entry2, update_func1, update_func2 = create_double_text_input_unit(root, canvas, 130, 90, "Container size", "x", "y", lambda: click(IMAGE_PATHS[2]))
+    entry3, entry4, update_func3, update_func4 = create_double_text_input_unit(root, canvas, 130, 90 + 60, "Platform amount", "x", "y", lambda: update_platform_count_placeholders(IMAGE_PATHS[4]))
 
-    entry5, update_func5 = create_text_input_unit(root, canvas, 130, 90 + 120, "Edge height (cm)", "", click)
-    entry6, update_func6 = create_text_input_unit(root, canvas, 130, 90 + 180, "Bevel size (cm)", "", update_bevel_size_placeholders)
-    entry7, update_func7 = create_text_input_unit(root, canvas, 130, 90 + 240, "Bevel count", "", click)
-    entry8, update_func8 = create_text_input_unit(root, canvas, 130, 90 + 300, "Connector edge lift (cm)", "", click)
-    entry9, update_func9 = create_text_input_unit(root, canvas, 130, 90 + 360, "Margins (cm)", "", click)
-    entry10, update_func10 = create_text_input_unit(root, canvas, 130, 90 + 420, "Model scale", "", click)
+    entry5, update_func5 = create_text_input_unit(root, canvas, 130, 90 + 120, "Edge height (cm)", "", lambda: click(IMAGE_PATHS[3]))
+    entry6, update_func6 = create_text_input_unit(root, canvas, 130, 90 + 180, "Bevel size (cm)", "", lambda: update_bevel_size_placeholders(IMAGE_PATHS[1]))
+    entry7, update_func7 = create_text_input_unit(root, canvas, 130, 90 + 240, "Bevel count", "", lambda: click(IMAGE_PATHS[0]))
+    entry8, update_func8 = create_text_input_unit(root, canvas, 130, 90 + 300, "Connector edge lift (cm)", "", lambda: click)
+    entry9, update_func9 = create_text_input_unit(root, canvas, 130, 90 + 360, "Margins (cm)", "", lambda: click)
+    entry10, update_func10 = create_text_input_unit(root, canvas, 130, 90 + 420, "Model scale", "", lambda: click)
 
-    entry11, entry12, update_func11, update_func12 = create_double_text_input_unit(root, canvas, 130, 90 + 480, "Print area dimensions", "x", "y", click)
+    entry11, entry12, update_func11, update_func12 = create_double_text_input_unit(root, canvas, 130, 90 + 480, "Print area dimensions", "x", "y", lambda: click)
 
     # make distinction between int and float entries?
     all_entries = [entry1, entry2, entry3, entry4, entry5, entry6, entry7, entry8, entry9, entry10, entry11, entry12]
@@ -274,6 +310,8 @@ def main():
     # TODO: The info box
     # TODO: Object oriented approach would probably be smart
     #       for the whole GUI project, but especially for the info box
+    
+
 
     root.mainloop()
     return 0
