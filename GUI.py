@@ -1,7 +1,10 @@
 import tkinter as tk
 from tkinter import ttk
 from PIL import Image, ImageTk, ImageDraw
-# TODO: make this file importable
+
+
+from text_paragraphs import *
+
 
 LIGHT_GREEN = "#91CF99"
 DARK_GREEN = "#517A52"
@@ -240,6 +243,12 @@ def main():
 
     # info box
     image_label = tk.Label(root)
+    info_box_title = tk.Label(root, text="Testing", bg=LIGHT_GREEN, fg=TEXT_GREEN, font=("Arial", 20))
+    info_box_title.place(x=600, y=80)
+
+    info_box_text = tk.Text(root, height=15, width=50, bd=0, highlightthickness=0, bg=LIGHT_GREEN, fg=TEXT_GREEN)
+    info_box_text.place(x=520, y=380)
+    info_box_text.insert(tk.END, generic_info[0])
 
     # Boxes
     canvas.create_polygon(0, 0, 0, 800, 1000, 800, fill=BG_GREEN)
@@ -250,23 +259,32 @@ def main():
     info_box_shadow = round_rectangle(canvas, 460, 100, 910, 740, radius=20, fill=DARK_GREEN)
     info_box = round_rectangle(canvas, 500, 60, 950, 700, radius=20, fill=LIGHT_GREEN)
 
-    def click(img_path = ""):
+    def click(img_path = "", title_text = "", paragraph_text = ""):
         if img_path != "":
             update_image(img_path)
+        if title_text != "":
+            update_label(info_box_title, title_text)
+        if paragraph_text != "":
+            update_text(info_box_text, paragraph_text)
         root.focus()
         #print("Click")
+    
+    def update_label(text_field, text_contents):
+        text_field.config(text = text_contents)
+    
+    def update_text(text_box, new_text):
+        text_box.delete("1.0", tk.END)
+        text_box.insert(tk.END, new_text)
 
-    def update_platform_count_placeholders(img_path = ""):
-        if img_path != "":
-            update_image(img_path)
+    def update_platform_count_placeholders(img_path = "", title_text = "", paragraph_text = ""):
+        click(img_path, title_text, paragraph_text)
         x_min, x_max, y_min, y_max = get_count_limits(float(entry1.get()), float(entry2.get()))
         update_func3(f"{x_min} - {x_max}")
         update_func4(f"{y_min} - {y_max}")
         root.focus()
 
-    def update_bevel_size_placeholders(img_path = ""):
-        if img_path != "":
-            click(img_path)
+    def update_bevel_size_placeholders(img_path = "", title_text = "", paragraph_text = ""):
+        click(img_path, title_text, paragraph_text)
         max_bevel = get_max_bevel(entry1, entry2, entry3, entry4)
         update_func6(f"{0} - {max_bevel:.2f}")
         root.focus()
@@ -278,20 +296,20 @@ def main():
         tk_image = ImageTk.PhotoImage(image)
         image_label.config(image=tk_image)
         image_label.image = tk_image
-        image_label.place(x=550, y=160)
+        image_label.place(x=550, y=130)
 
     # Inputs and buttons
-    entry1, entry2, update_func1, update_func2 = create_double_text_input_unit(root, canvas, 130, 90, "Container size", "x", "y", lambda: click(IMAGE_PATHS[2]))
-    entry3, entry4, update_func3, update_func4 = create_double_text_input_unit(root, canvas, 130, 90 + 60, "Platform amount", "x", "y", lambda: update_platform_count_placeholders(IMAGE_PATHS[4]))
+    entry1, entry2, update_func1, update_func2 = create_double_text_input_unit(root, canvas, 130, 90, "Container size", "x", "y", lambda: click(IMAGE_PATHS[2], titles[0], paragraphs[0]))
+    entry3, entry4, update_func3, update_func4 = create_double_text_input_unit(root, canvas, 130, 90 + 60, "Platform amount", "x", "y", lambda: update_platform_count_placeholders(IMAGE_PATHS[0], titles[1], paragraphs[1]))
 
-    entry5, update_func5 = create_text_input_unit(root, canvas, 130, 90 + 120, "Edge height (cm)", "", lambda: click(IMAGE_PATHS[3]))
-    entry6, update_func6 = create_text_input_unit(root, canvas, 130, 90 + 180, "Bevel size (cm)", "", lambda: update_bevel_size_placeholders(IMAGE_PATHS[1]))
-    entry7, update_func7 = create_text_input_unit(root, canvas, 130, 90 + 240, "Bevel count", "", lambda: click(IMAGE_PATHS[0]))
-    entry8, update_func8 = create_text_input_unit(root, canvas, 130, 90 + 300, "Connector edge lift (cm)", "", lambda: click)
-    entry9, update_func9 = create_text_input_unit(root, canvas, 130, 90 + 360, "Margins (cm)", "", lambda: click)
-    entry10, update_func10 = create_text_input_unit(root, canvas, 130, 90 + 420, "Model scale", "", lambda: click)
+    entry5, update_func5 = create_text_input_unit(root, canvas, 130, 90 + 120, "Edge height (cm)", "", lambda: click("", titles[2], paragraphs[2]))
+    entry6, update_func6 = create_text_input_unit(root, canvas, 130, 90 + 180, "Bevel size (cm)", "", lambda: update_bevel_size_placeholders(IMAGE_PATHS[3], titles[3], paragraphs[3]))
+    entry7, update_func7 = create_text_input_unit(root, canvas, 130, 90 + 240, "Bevel count", "", lambda: click(IMAGE_PATHS[4], titles[4], paragraphs[4]))
+    entry8, update_func8 = create_text_input_unit(root, canvas, 130, 90 + 300, "Connector edge lift (cm)", "", lambda: click(IMAGE_PATHS[1], titles[5], paragraphs[5]))
+    entry9, update_func9 = create_text_input_unit(root, canvas, 130, 90 + 360, "Margins (cm)", "", lambda: click("", titles[6], paragraphs[6]))
+    entry10, update_func10 = create_text_input_unit(root, canvas, 130, 90 + 420, "Model scale", "", lambda: click("", titles[7], paragraphs[7]))
 
-    entry11, entry12, update_func11, update_func12 = create_double_text_input_unit(root, canvas, 130, 90 + 480, "Print area dimensions", "x", "y", lambda: click)
+    entry11, entry12, update_func11, update_func12 = create_double_text_input_unit(root, canvas, 130, 90 + 480, "Print area dimensions", "x", "y", lambda: click("", titles[8], paragraphs[8]))
 
     # make distinction between int and float entries?
     all_entries = [entry1, entry2, entry3, entry4, entry5, entry6, entry7, entry8, entry9, entry10, entry11, entry12]
