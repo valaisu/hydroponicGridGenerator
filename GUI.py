@@ -2,41 +2,8 @@ import tkinter as tk
 from tkinter import ttk
 from PIL import Image, ImageTk, ImageDraw
 
-
-from text_paragraphs import *
-
-
-LIGHT_GREEN = "#91CF99"
-DARK_GREEN = "#517A52"
-TEXT_GREEN = "#2A2C2A"
-BG_WHITE = "#D9D9D9"
-BG_GREEN = "#7EC27F"
-
-
-BASE_PLATFORM_SIZE = 12
-ARM_BASE_LOC = 5
-ARM_MIN_LOC = 3.5
-CORNER_BASE_LOC = 6
-EDGE_BASE_HEIGHT = 1
-
-CONNECTOR_BASE_START = 1
-CONNECTOR_BASE_MID = 2
-CONNECTOR_BASE_END = 3
-
-TEST_CONNECTOR_SIZE = 6
-
-MIN_PLATFORM_SIZE = 12
-MAX_PLATFORM_SIZE = 20
-
-IMAGE_PATHS = ["pictures/Platform_count_visualization.png",
-               "pictures/Edge_lift_visualization.png", 
-               "pictures/Container_size_visualization.png", 
-               "pictures/Bevel_visualization.png", 
-               "pictures/Bevel_count_illustration.png",
-               "pictures/base_image.png", 
-               "pictures/edge_height_visualization.png", 
-               "pictures/Margins_illustration.png", 
-               "pictures/printer_dimensions.png"]
+from constants import *
+from stl_generation_logic import generate
 
 
 def round_rectangle(canvas, x1, y1, x2, y2, radius=25, **kwargs):
@@ -323,6 +290,17 @@ def main():
         if not check_value_consistency(all_entries, float_entries, int_entries):
             print("the numbers not ok")
             return
+        x_size = float(entry1.get()) / int(entry3.get())
+        y_size = float(entry2.get()) / int(entry4.get())
+        generate(x_size, y_size, 
+                 float(entry5.get()), 
+                 float(entry6.get()), 
+                 int(entry7.get()), 
+                 float(entry9.get()), 
+                 int(entry3.get()), 
+                 int(entry4.get()), 
+                 float(entry8.get()), 
+                 float(entry10.get()))
         print("Success!")
 
     # the "submit" button

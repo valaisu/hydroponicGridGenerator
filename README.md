@@ -28,8 +28,8 @@ The user gives width and length of their equivalent of aquarium, along with some
 - [x] Scale the end models
 
 ### Improve usability
-- [ ] GUI
-- [ ] Pictures
+- [x] GUI
+- [x] Pictures
 - [ ] Installation guide
 - [ ] Installation scripts
 - [x] Export as stl
