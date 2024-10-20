@@ -4,42 +4,7 @@ from functions import *
 # TODO: Add fail-proofing
 # TODO: Add margins
 
-BASE_PLATFORM_SIZE = 12
-ARM_BASE_LOC = 5
-ARM_MIN_LOC = 3.5
-CORNER_BASE_LOC = 6
-EDGE_BASE_HEIGHT = 1
-
-CONNECTOR_BASE_START = 1
-CONNECTOR_BASE_MID = 2
-CONNECTOR_BASE_END = 3
-
-TEST_CONNECTOR_SIZE = 6
-
-MIN_PLATFORM_SIZE = 12
-MAX_PLATFORM_SIZE = 20
-
-#MARGIN = 0.00  # 1 unit = 1 cm, TODO: find right value later
-
-PLATFORM_NAME = "platform"
-PLATFORM_PATH = "models_4.0/ModularPlatform.blend"
-SUPPORT_PATH = "models_4.0/Supports.blend"
-TEST_PATH_X = "models_4.0/test_x.blend"
-TEST_PATH_Y = "models_4.0/test_y.blend"
-SAVE_TO = "output/platform_middle.blend"
-
-
-PLATFORM_CORNER_VERT_GROUPS = ["RU", "LU", "RD", "LD"]
-PLATFORM_EDGE_VERT_GROUPS = ["U", "R", "D", "L"]
-PLATFORM_ARM_VERT_GROUPS = ["RUarm", "LUarm", "RDarm", "LDarm"]
-PLATFORM_EDGE_VERT_GROUP = "Edges"
-MOVE_INSTRUCTIONS_CORNER = {"RU" : (1, 1, 0), "LU" : (-1, 1, 0), "RD" : (1, -1, 0), "LD" : (-1, -1, 0)}
-MOVE_INSTRUCTIONS_ARM = {"RUarm" : (1, 1, 0), "LUarm" : (-1, 1, 0), "RDarm" : (1, -1, 0), "LDarm" : (-1, -1, 0)}
-MOVE_INSTRUCTIONS_EDGE = {"U" : (0, 1, 0), "R" : (1, 0, 0), "D" : (0, -1, 0), "L" : (-1, 0, 0)}
-
-CONNECTOR_VERT_GROUPS = ["FemaleHead", "MaleHead", "FlatHead"]
-CONNECTOR_OBJECT = ["ConnectorFemale", "ConnectorMale", "ConnectorFlat"]
-
+from constants import *
 
 def get_max_bevel(arm_loc, corner_loc):
     return corner_loc - arm_loc
@@ -67,7 +32,7 @@ def calc_grid_dim_limits(x, y):
     return x_size, y_size, x_amount, y_amount
 
 
-def edit_platforms(x_size, y_size, x_amount, y_amount, height, bevel_height, bevel_count, margin, scale):
+def edit_platforms(x_size, y_size, x_amount, y_amount, height, bevel_width, bevel_count, margin, scale):
 
     # calc amounts
     corners = 2 # 2 unique corners
@@ -113,7 +78,7 @@ def edit_platforms(x_size, y_size, x_amount, y_amount, height, bevel_height, bev
     # NOTE: diagonally opposite corners are identical
     # NOTE: the model has been scaled, but the bevel uses LOCAL SCALE
     # LU/RD corner:
-    bevel_vertex_group_edges(PLATFORM_NAME, ["RU"], bevel_height, bevel_count)  # 
+    bevel_vertex_group_edges(PLATFORM_NAME, ["RU"], bevel_width, bevel_count)  # 
     bpy.ops.wm.save_as_mainfile(filepath=f"output/platform_corner_LU_RD_{corners}x.blend")
     export(f"output/platform_corner_LU_RD_{corners}x.stl")
 
@@ -273,29 +238,38 @@ def create_test_support(dir_is_x: bool, flat: tuple[bool, bool], size, edge_lift
     export(save_file[:-6] + ".stl")
 
 
+def generate(x_size, y_size, edge_height, bevel_width, bevel_count, margin, x_amount, y_amount, edge_lift, scale):
+    arm_loc_x, arm_loc_y = edit_platforms(x_size, y_size, x_amount, y_amount, edge_height, bevel_width, bevel_count, margin, scale)
+    x_corner_loc = x_size/2
+    y_corner_loc = y_size/2
+    edit_supports(arm_loc_x, arm_loc_y, x_corner_loc, y_corner_loc, edge_lift, margin, x_amount, y_amount, scale)
+    pass
+
+
+'''
 def main():
 
     #x, y = ask_container_size()
     #x_size, y_size, x_amount, y_amount = calc_grid_dim_limits(x, y)
-    #height = float(input(" Desired edge height: "))
-    #bevel_height = float(input(" Desired bevel height: "))
+    #edge_height = float(input(" Desired edge height: "))
+    #bevel_width = float(input(" Desired bevel height: "))
     #edge_lift = float(input(" Desired edge lift: "))
     #bevel_count = int(input(" Desired bevel count: "))
     #margin = float(input(" Margin per part "))  # TODO: I don't actually know what is a good margin
     #scale = float(input(" Final scaling factor "))
-    x_size, y_size, height, bevel_height, bevel_count, margin, x_amount, y_amount, edge_lift, scale = 17.5, 20.0, 2, 1, 10, 0.01, 4, 2, 1.5, 10.0
+    x_size, y_size, edge_height, bevel_width, bevel_count, margin, x_amount, y_amount, edge_lift, scale = 17.5, 20.0, 2, 1, 10, 0.01, 4, 2, 1.5, 10.0
+    generate(x_size, y_size, edge_height, bevel_width, bevel_count, margin, x_amount, y_amount, edge_lift, scale)
 
-    print(f" Creating platforms of size {x_size:.2f}cm *{y_size:.2f}cm \n Amount to be printed: {x_amount} * {y_amount} = {x_amount*y_amount}")
-    arm_loc_x, arm_loc_y = edit_platforms(x_size, y_size, x_amount, y_amount, height, bevel_height, bevel_count, margin, scale)
-    x_corner_loc = x_size/2
-    y_corner_loc = y_size/2
-    edit_supports(arm_loc_x, arm_loc_y, x_corner_loc, y_corner_loc, edge_lift, margin, x_amount, y_amount, scale)
+    #print(f" Creating platforms of size {x_size:.2f}cm *{y_size:.2f}cm \n Amount to be printed: {x_amount} * {y_amount} = {x_amount*y_amount}")
+    #arm_loc_x, arm_loc_y = edit_platforms(x_size, y_size, x_amount, y_amount, edge_height, bevel_width, bevel_count, margin, scale)
+    #x_corner_loc = x_size/2
+    #y_corner_loc = y_size/2
+    #edit_supports(arm_loc_x, arm_loc_y, x_corner_loc, y_corner_loc, edge_lift, margin, x_amount, y_amount, scale)
     return 0
 
 
-if __name__ == "__main__":
-    main()
+main()
 
-
+'''
 
 

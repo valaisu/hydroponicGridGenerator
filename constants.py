@@ -1,12 +1,65 @@
 
-# TODO: add more labels to the images
-'''
-images for:
-Home
-margins
-edge height
-printer dimensions
-'''
+
+# Geometry related constants:
+
+BASE_PLATFORM_SIZE = 12
+ARM_BASE_LOC = 5
+ARM_MIN_LOC = 3.5
+CORNER_BASE_LOC = 6
+EDGE_BASE_HEIGHT = 1
+
+CONNECTOR_BASE_START = 1
+CONNECTOR_BASE_MID = 2
+CONNECTOR_BASE_END = 3
+
+TEST_CONNECTOR_SIZE = 6
+
+MIN_PLATFORM_SIZE = 12
+MAX_PLATFORM_SIZE = 20
+
+# names
+
+PLATFORM_CORNER_VERT_GROUPS = ["RU", "LU", "RD", "LD"]
+PLATFORM_EDGE_VERT_GROUPS = ["U", "R", "D", "L"]
+PLATFORM_ARM_VERT_GROUPS = ["RUarm", "LUarm", "RDarm", "LDarm"]
+PLATFORM_EDGE_VERT_GROUP = "Edges"
+MOVE_INSTRUCTIONS_CORNER = {"RU" : (1, 1, 0), "LU" : (-1, 1, 0), "RD" : (1, -1, 0), "LD" : (-1, -1, 0)}
+MOVE_INSTRUCTIONS_ARM = {"RUarm" : (1, 1, 0), "LUarm" : (-1, 1, 0), "RDarm" : (1, -1, 0), "LDarm" : (-1, -1, 0)}
+MOVE_INSTRUCTIONS_EDGE = {"U" : (0, 1, 0), "R" : (1, 0, 0), "D" : (0, -1, 0), "L" : (-1, 0, 0)}
+
+CONNECTOR_VERT_GROUPS = ["FemaleHead", "MaleHead", "FlatHead"]
+CONNECTOR_OBJECT = ["ConnectorFemale", "ConnectorMale", "ConnectorFlat"]
+
+
+# paths
+
+PLATFORM_NAME = "platform"
+PLATFORM_PATH = "models_4.0/ModularPlatform.blend"
+SUPPORT_PATH = "models_4.0/Supports.blend"
+TEST_PATH_X = "models_4.0/test_x.blend"
+TEST_PATH_Y = "models_4.0/test_y.blend"
+SAVE_TO = "output/platform_middle.blend"
+
+IMAGE_PATHS = ["pictures/Platform_count_visualization.png",
+               "pictures/Edge_lift_visualization.png", 
+               "pictures/Container_size_visualization.png", 
+               "pictures/Bevel_visualization.png", 
+               "pictures/Bevel_count_illustration.png",
+               "pictures/base_image.png", 
+               "pictures/edge_height_visualization.png", 
+               "pictures/Margins_illustration.png", 
+               "pictures/printer_dimensions.png"]
+
+# Colors
+
+LIGHT_GREEN = "#91CF99"
+DARK_GREEN = "#517A52"
+TEXT_GREEN = "#2A2C2A"
+BG_WHITE = "#D9D9D9"
+BG_GREEN = "#7EC27F"
+
+
+# GUI text
 
 titles = [
     "   Container size    ", 
