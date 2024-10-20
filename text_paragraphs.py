@@ -2,8 +2,10 @@
 # TODO: add more labels to the images
 '''
 images for:
+Home
 margins
 edge height
+printer dimensions
 '''
 
 titles = [

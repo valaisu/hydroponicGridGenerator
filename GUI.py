@@ -32,7 +32,11 @@ IMAGE_PATHS = ["pictures/Platform_count_visualization.png",
                "pictures/Edge_lift_visualization.png", 
                "pictures/Container_size_visualization.png", 
                "pictures/Bevel_visualization.png", 
-               "pictures/Bevel_count_illustration.png"]
+               "pictures/Bevel_count_illustration.png",
+               "pictures/base_image.png", 
+               "pictures/edge_height_visualization.png", 
+               "pictures/Margins_illustration.png", 
+               "pictures/printer_dimensions.png"]
 
 
 def round_rectangle(canvas, x1, y1, x2, y2, radius=25, **kwargs):
@@ -242,12 +246,12 @@ def main():
     canvas.pack()
 
     # info box
-    image_label = tk.Label(root)
-    info_box_title = tk.Label(root, text="Testing", bg=LIGHT_GREEN, fg=TEXT_GREEN, font=("Arial", 20))
+    image_label = tk.Label(root, borderwidth=0)
+    info_box_title = tk.Label(root, text="Print file generator", bg=LIGHT_GREEN, fg=TEXT_GREEN, font=("Arial", 20))
     info_box_title.place(x=600, y=80)
 
-    info_box_text = tk.Text(root, height=15, width=50, bd=0, highlightthickness=0, bg=LIGHT_GREEN, fg=TEXT_GREEN)
-    info_box_text.place(x=520, y=380)
+    info_box_text = tk.Text(root, height=15, width=50, bd=0, highlightthickness=0, bg=LIGHT_GREEN, fg=TEXT_GREEN, wrap=tk.WORD)
+    info_box_text.place(x=520, y=440)
     info_box_text.insert(tk.END, generic_info[0])
 
     # Boxes
@@ -267,7 +271,6 @@ def main():
         if paragraph_text != "":
             update_text(info_box_text, paragraph_text)
         root.focus()
-        #print("Click")
     
     def update_label(text_field, text_contents):
         text_field.config(text = text_contents)
@@ -291,25 +294,25 @@ def main():
     
     def update_image(path):
         image = Image.open(path)
-        image = image.resize((350, 250)) 
+        image = image.resize((400, 296)) 
         image = round_corners(image, 30, hex_to_rgba(LIGHT_GREEN))
         tk_image = ImageTk.PhotoImage(image)
         image_label.config(image=tk_image)
         image_label.image = tk_image
-        image_label.place(x=550, y=130)
+        image_label.place(x=525, y=130)
 
     # Inputs and buttons
     entry1, entry2, update_func1, update_func2 = create_double_text_input_unit(root, canvas, 130, 90, "Container size", "x", "y", lambda: click(IMAGE_PATHS[2], titles[0], paragraphs[0]))
     entry3, entry4, update_func3, update_func4 = create_double_text_input_unit(root, canvas, 130, 90 + 60, "Platform amount", "x", "y", lambda: update_platform_count_placeholders(IMAGE_PATHS[0], titles[1], paragraphs[1]))
 
-    entry5, update_func5 = create_text_input_unit(root, canvas, 130, 90 + 120, "Edge height (cm)", "", lambda: click("", titles[2], paragraphs[2]))
+    entry5, update_func5 = create_text_input_unit(root, canvas, 130, 90 + 120, "Edge height (cm)", "", lambda: click(IMAGE_PATHS[6], titles[2], paragraphs[2]))
     entry6, update_func6 = create_text_input_unit(root, canvas, 130, 90 + 180, "Bevel size (cm)", "", lambda: update_bevel_size_placeholders(IMAGE_PATHS[3], titles[3], paragraphs[3]))
     entry7, update_func7 = create_text_input_unit(root, canvas, 130, 90 + 240, "Bevel count", "", lambda: click(IMAGE_PATHS[4], titles[4], paragraphs[4]))
     entry8, update_func8 = create_text_input_unit(root, canvas, 130, 90 + 300, "Connector edge lift (cm)", "", lambda: click(IMAGE_PATHS[1], titles[5], paragraphs[5]))
-    entry9, update_func9 = create_text_input_unit(root, canvas, 130, 90 + 360, "Margins (cm)", "", lambda: click("", titles[6], paragraphs[6]))
-    entry10, update_func10 = create_text_input_unit(root, canvas, 130, 90 + 420, "Model scale", "", lambda: click("", titles[7], paragraphs[7]))
+    entry9, update_func9 = create_text_input_unit(root, canvas, 130, 90 + 360, "Margins (cm)", "", lambda: click(IMAGE_PATHS[7], titles[6], paragraphs[6]))
+    entry10, update_func10 = create_text_input_unit(root, canvas, 130, 90 + 420, "Model scale", "", lambda: click(IMAGE_PATHS[8], titles[7], paragraphs[7])) # TODO: some image needed for this too
 
-    entry11, entry12, update_func11, update_func12 = create_double_text_input_unit(root, canvas, 130, 90 + 480, "Print area dimensions", "x", "y", lambda: click("", titles[8], paragraphs[8]))
+    entry11, entry12, update_func11, update_func12 = create_double_text_input_unit(root, canvas, 130, 90 + 480, "Print area dimensions", "x", "y", lambda: click(IMAGE_PATHS[8], titles[8], paragraphs[8]))
 
     # make distinction between int and float entries?
     all_entries = [entry1, entry2, entry3, entry4, entry5, entry6, entry7, entry8, entry9, entry10, entry11, entry12]
@@ -324,12 +327,8 @@ def main():
 
     # the "submit" button
     rectangular_button(canvas, 150, 635, 350, 680, "Generate", generate_files, 20, fill=BG_GREEN)
-
-    # TODO: The info box
-    # TODO: Object oriented approach would probably be smart
-    #       for the whole GUI project, but especially for the info box
-    
-
+    # the base image
+    update_image(IMAGE_PATHS[5])
 
     root.mainloop()
     return 0
