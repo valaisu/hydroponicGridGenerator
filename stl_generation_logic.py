@@ -70,13 +70,15 @@ def edit_platforms(x_size, y_size, x_amount, y_amount, height, bevel_width, beve
     # scale
     scale_all(scale)
 
+    combine_and_move_to_LB_corner()  # important standard when combining stl files
+
     # save base piece
     bpy.ops.wm.save_as_mainfile(filepath=f"output/individual_stl/platform_middle_{middles}x.blend")
     export(f"output/individual_stl/platform_middle_{middles}x.stl")
 
     # the file is still open
     # NOTE: diagonally opposite corners are identical
-    # NOTE: the model has been scaled, but the bevel uses LOCAL SCALE
+    # NOTE: the model has been scaled (globally), but the bevel uses LOCAL SCALE
     # LU/RD corner:
     bevel_vertex_group_edges(PLATFORM_NAME, ["RU"], bevel_width, bevel_count)  # 
     bpy.ops.wm.save_as_mainfile(filepath=f"output/individual_stl/platform_corner_LU_RD_{corners}x.blend")
@@ -179,6 +181,8 @@ def create_support(parts: list[str], lengths: list[float], edge_lift, margin, sc
     # scale
     scale_all(scale)
 
+    combine_and_move_to_LB_corner()
+
     # save
     bpy.ops.wm.save_as_mainfile(filepath=save_file)
     export(save_file[:-6] + ".stl")
@@ -232,6 +236,8 @@ def create_test_support(dir_is_x: bool, flat: tuple[bool, bool], size, edge_lift
         
     # scale
     scale_all(scale)
+    
+    combine_and_move_to_LB_corner()
 
     # save
     bpy.ops.wm.save_as_mainfile(filepath=save_file)

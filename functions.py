@@ -4,7 +4,7 @@
 
 import bpy
 from math import radians
-from mathutils import Matrix
+import mathutils
 
 # Moves vertices belonging to certain vertex groups
 def move_vertices(object_name: str, vertex_group_names: list[str], move_vector: tuple[int, int, int]):
@@ -73,6 +73,27 @@ def duplicate_and_select(obj_name: str):
     new_obj = bpy.context.active_object
     return new_obj
 
+def combine_and_move_to_LB_corner():
+
+    bpy.ops.object.select_all(action='DESELECT')
+    for obj in bpy.data.objects:
+        if obj.type == 'MESH':
+            obj.select_set(True)
+
+    if len(bpy.data.objects) > 1:  # avoids a warning
+        bpy.context.view_layer.objects.active = bpy.context.selected_objects[0]  # one must be active
+        bpy.ops.object.join()
+
+    combined_obj = bpy.context.view_layer.objects.active
+
+    # convert bounding box from local space to global
+    global_coords = [combined_obj.matrix_world @ mathutils.Vector(corner) for corner in combined_obj.bound_box] 
+    min_x = min([v.x for v in global_coords])
+    min_y = min([v.y for v in global_coords])
+
+    combined_obj.location.x = combined_obj.location.x - min_x
+    combined_obj.location.y = combined_obj.location.y - min_y
+
 
 # Rotates object around its origin
 def rotate(object_name: str, degrees: float, axis: str):
@@ -81,13 +102,13 @@ def rotate(object_name: str, degrees: float, axis: str):
     object.select_set(True) 
     bpy.context.view_layer.objects.active = object # sometimes needed
 
-    rot_mat = Matrix.Rotation(radians(degrees), 4, axis)
+    rot_mat = mathutils.Matrix.Rotation(radians(degrees), 4, axis)
 
     # decompose world_matrix's components, and from them assemble 4x4 matrices
     orig_loc, orig_rot, orig_scale = object.matrix_world.decompose()
-    orig_loc_mat = Matrix.Translation(orig_loc)
+    orig_loc_mat = mathutils.Matrix.Translation(orig_loc)
     orig_rot_mat = orig_rot.to_matrix().to_4x4()
-    orig_scale_mat = Matrix.Scale(orig_scale[0],4,(1,0,0)) * Matrix.Scale(orig_scale[1],4,(0,1,0)) @ Matrix.Scale(orig_scale[2],4,(0,0,1))
+    orig_scale_mat = mathutils.Matrix.Scale(orig_scale[0],4,(1,0,0)) * mathutils.Matrix.Scale(orig_scale[1],4,(0,1,0)) @ mathutils.Matrix.Scale(orig_scale[2],4,(0,0,1))
 
     # assemble the new matrix
     object.matrix_world = orig_loc_mat @ rot_mat @ orig_rot_mat @ orig_scale_mat 
