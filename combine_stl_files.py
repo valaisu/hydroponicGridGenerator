@@ -38,7 +38,14 @@ print(print_counts)
     
 
 
-def arrange(printer_dimension_x: float, printer_dimension_y: float, input_folder_path: str, output_folder_path: str, margin_edge: int = 5, margin_between: int = 5):
+def arrange(printer_dimension_x: float, printer_dimension_y: float, input_folder_path: str, output_folder_path: str, scale = 1, margin_edge: int = 0.05, margin_between: int = 0.05):
+    
+    if scale != 1:
+        printer_dimension_x *= scale
+        printer_dimension_y *= scale
+        margin_between *= scale
+        margin_edge *= scale
+    
     # Read all files
     stl_files = [f for f in listdir(input_folder_path) if isfile(join(input_folder_path, f)) and f.endswith(".stl")]
     print_counts = extract_print_counts(stl_files)
@@ -59,16 +66,14 @@ def arrange(printer_dimension_x: float, printer_dimension_y: float, input_folder
             file_width = file.x.max() - file.x.min()
             file_height = file.y.max() - file.y.min()
 
-            # Check if it fits in the current row
+            # check x
             if file_width + margin_between + x_filled > printer_dimension_x:
-                # Move to the next row
                 y_filled += y_row_height + margin_between
                 x_filled = margin_edge
                 y_row_height = 0
 
-            # Check if it fits in the current print volume
+            # check y
             if file_height + margin_between + y_filled > printer_dimension_y:
-                # Save current mesh and start a new file
                 final_product = mesh.Mesh(np.concatenate([m.data for m in all_mesh]))
                 final_product.save(join(output_folder_path, f"print_{file_number}.stl"))
                 print(f"saved print_{file_number}.stl")
@@ -78,21 +83,22 @@ def arrange(printer_dimension_x: float, printer_dimension_y: float, input_folder
                 y_filled = margin_edge
                 y_row_height = 0
 
-            # Add the current mesh copy to the list
             mesh_copy = copy.deepcopy(file)
             mesh_copy.translate([x_filled, y_filled, 0])
             all_mesh.append(mesh_copy)
 
-            # Update the filled x position and row height
             x_filled += file_width + margin_between
             y_row_height = max(y_row_height, file_height)
 
-    # Save the remaining meshes in the last file
+    # save remaining
     if all_mesh:
         final_product = mesh.Mesh(np.concatenate([m.data for m in all_mesh]))
         final_product.save(join(output_folder_path, f"print_{file_number}.stl"))
         print(f"saved print_{file_number}.stl")   
 
 
-# TODO: take scaling into account
-arrange(200, 200, mypath, output)
+arrange(20, 20, mypath, output, 10)
+
+
+# TODO: clean folders before adding new stuff
+
