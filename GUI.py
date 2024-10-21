@@ -283,6 +283,12 @@ def main():
 
     entry11, entry12, update_func11, update_func12 = create_double_text_input_unit(root, canvas, 130, 90 + 480, "Print area dimensions", "x", "y", lambda: click(IMAGE_PATHS[8], titles[8], paragraphs[8]))
 
+    # My suggested values
+    entry5.insert(0, 2)
+    entry7.insert(0, 2)
+    entry9.insert(0, 0.001)
+    entry10.insert(0, 10)
+
     # make distinction between int and float entries?
     all_entries = [entry1, entry2, entry3, entry4, entry5, entry6, entry7, entry8, entry9, entry10, entry11, entry12]
     float_entries = [entry1, entry2, entry5, entry7, entry8, entry9, entry10, entry11, entry12]
@@ -317,3 +323,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
+#TODO: add home button
+#TODO: add "generated!" indicator

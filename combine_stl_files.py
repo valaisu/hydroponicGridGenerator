@@ -25,7 +25,7 @@ def extract_print_counts(stl_files: list[str]) -> list[int]:
     return counts
 
 # reads folder combining files with single .stl
-def arrange(printer_dimension_x: float, printer_dimension_y: float, input_folder_path: str, output_folder_path: str, scale = 1, margin_edge: int = 0.05, margin_between: int = 0.05):
+def arrange(printer_dimension_x: float, printer_dimension_y: float, input_folder_path: str, output_folder_path: str, scale = 1, margin_edge: int = 0.1, margin_between: int = 0.1):
     
     if scale != 1:
         printer_dimension_x *= scale

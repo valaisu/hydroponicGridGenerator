@@ -35,6 +35,7 @@ The user gives width and length of their equivalent of aquarium, along with some
 - [x] Export as stl
 - [x] Combined stl files
 - [x] Better file management
+- [x] Prefill values
 
 ### Advanced ideas
 
