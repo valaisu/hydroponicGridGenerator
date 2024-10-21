@@ -49,3 +49,12 @@ water. The parts that will be in water, should be printed with PETG.
 
 
 
+About the code
+I am happy that I was able to "use Blender" with code outside of blender.
+The GUI.py is imo quite ugly in terms of the code (graphically im satisfied), 
+it is kind of hard to read the code as the structure is not abundant with 
+coherence. Object oriented structure would have been way better, but for a 
+small program like this it makes sense to just quickly code up something.  
+
+
+

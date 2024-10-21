@@ -38,7 +38,6 @@ PLATFORM_PATH = "models_4.0/ModularPlatform.blend"
 SUPPORT_PATH = "models_4.0/Supports.blend"
 TEST_PATH_X = "models_4.0/test_x.blend"
 TEST_PATH_Y = "models_4.0/test_y.blend"
-SAVE_TO = "output/platform_middle.blend"
 
 IMAGE_PATHS = ["pictures/Platform_count_visualization.png",
                "pictures/Edge_lift_visualization.png", 
