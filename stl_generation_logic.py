@@ -262,33 +262,7 @@ def generate(x_size, y_size, edge_height, bevel_width, bevel_count, margin, x_am
     x_corner_loc = x_size/2
     y_corner_loc = y_size/2
     edit_supports(arm_loc_x, arm_loc_y, x_corner_loc, y_corner_loc, edge_lift, margin, x_amount, y_amount, scale)
-    pass
+    
 
-
-'''
-def main():
-
-    #x, y = ask_container_size()
-    #x_size, y_size, x_amount, y_amount = calc_grid_dim_limits(x, y)
-    #edge_height = float(input(" Desired edge height: "))
-    #bevel_width = float(input(" Desired bevel height: "))
-    #edge_lift = float(input(" Desired edge lift: "))
-    #bevel_count = int(input(" Desired bevel count: "))
-    #margin = float(input(" Margin per part "))  # TODO: I don't actually know what is a good margin
-    #scale = float(input(" Final scaling factor "))
-    x_size, y_size, edge_height, bevel_width, bevel_count, margin, x_amount, y_amount, edge_lift, scale = 17.5, 20.0, 2, 1, 10, 0.01, 4, 2, 1.5, 10.0
-    generate(x_size, y_size, edge_height, bevel_width, bevel_count, margin, x_amount, y_amount, edge_lift, scale)
-
-    #print(f" Creating platforms of size {x_size:.2f}cm *{y_size:.2f}cm \n Amount to be printed: {x_amount} * {y_amount} = {x_amount*y_amount}")
-    #arm_loc_x, arm_loc_y = edit_platforms(x_size, y_size, x_amount, y_amount, edge_height, bevel_width, bevel_count, margin, scale)
-    #x_corner_loc = x_size/2
-    #y_corner_loc = y_size/2
-    #edit_supports(arm_loc_x, arm_loc_y, x_corner_loc, y_corner_loc, edge_lift, margin, x_amount, y_amount, scale)
-    return 0
-
-
-main()
-
-'''
 
 

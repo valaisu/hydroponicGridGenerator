@@ -13,27 +13,16 @@ The function knows the users print area, and base on that, combines
 the .stl files into fewer stl files. The arrangement of the meshes
 will be done using bounding boxes, so it won't of course be optimal, 
 just good enough.  
-
-
 '''
-def extract_print_counts(files: list[str]) -> list[int]:
+
+
+def extract_print_counts(stl_files: list[str]) -> list[int]:
     counts = []
     pattern = "_\d+x"
     for p in stl_files:
         x = re.findall(pattern, p)
         counts.append(int(x[0][1:-1]))
     return counts
-
-#folder = "output"
-mypath = "output/individual_stl"
-output = "output/combined_stl"
-
-stl_files = [f for f in listdir(mypath) if isfile(join(mypath, f)) if (f[-4:] == ".stl")]# 
-print_counts = extract_print_counts(stl_files)
-
-
-print(stl_files)
-print(print_counts)
 
 
 def arrange(printer_dimension_x: float, printer_dimension_y: float, input_folder_path: str, output_folder_path: str, scale = 1, margin_edge: int = 0.05, margin_between: int = 0.05):
@@ -56,7 +45,7 @@ def arrange(printer_dimension_x: float, printer_dimension_y: float, input_folder
     # files
     for i in range(len(stl_files)):
         path = join(input_folder_path, stl_files[i])
-        print(f"process {path}")
+        #print(f"process {path}")
         file = mesh.Mesh.from_file(path)
 
         # each copy
@@ -74,7 +63,7 @@ def arrange(printer_dimension_x: float, printer_dimension_y: float, input_folder
             if file_height + margin_between + y_filled > printer_dimension_y:
                 final_product = mesh.Mesh(np.concatenate([m.data for m in all_mesh]))
                 final_product.save(join(output_folder_path, f"print_{file_number}.stl"))
-                print(f"saved print_{file_number}.stl")
+                #print(f"saved print_{file_number}.stl")
                 file_number += 1
                 all_mesh = []
                 x_filled = margin_edge
@@ -92,11 +81,6 @@ def arrange(printer_dimension_x: float, printer_dimension_y: float, input_folder
     if all_mesh:
         final_product = mesh.Mesh(np.concatenate([m.data for m in all_mesh]))
         final_product.save(join(output_folder_path, f"print_{file_number}.stl"))
-        print(f"saved print_{file_number}.stl")   
+        #print(f"saved print_{file_number}.stl")   
 
-
-#arrange(20, 20, mypath, output, 10)
-
-
-# TODO: clean folders before adding new stuff
 

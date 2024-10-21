@@ -5,6 +5,8 @@ from PIL import Image, ImageTk, ImageDraw
 from constants import *
 from stl_generation_logic import generate
 
+from combine_stl_files import *
+
 
 def round_rectangle(canvas, x1, y1, x2, y2, radius=25, **kwargs):
         
@@ -301,6 +303,8 @@ def main():
                  int(entry4.get()), 
                  float(entry8.get()), 
                  float(entry10.get()))
+        
+        arrange(float(entry11.get()), float(entry12.get()), INDIVIDUAL_STL_FOLDER, COMBINED_STL_FOLDER, float(entry10.get()))
         print("Success!")
 
     # the "submit" button
