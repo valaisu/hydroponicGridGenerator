@@ -49,6 +49,11 @@ IMAGE_PATHS = ["pictures/Platform_count_visualization.png",
                "pictures/Margins_illustration.png", 
                "pictures/printer_dimensions.png"]
 
+COMBINED_STL_FOLDER = "output/combined_stl"
+INDIVIDUAL_STL_FOLDER = "output/individual_stl"
+TEST_PRINTS_FOLDER = "output/test_prints"
+
+
 # Colors
 
 LIGHT_GREEN = "#91CF99"

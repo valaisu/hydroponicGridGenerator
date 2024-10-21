@@ -1,10 +1,20 @@
 import bpy
 from functions import *
-# TODO: Code some kind of GUI
-# TODO: Add fail-proofing
-# TODO: Add margins
-
 from constants import *
+
+from os import listdir, remove
+from os.path import isfile, join
+
+# TODO: Add fail-proofing
+
+
+def clean_folders(folder_paths: list[str]):
+    for path in folder_paths:
+        files = [f for f in listdir(path) if isfile(join(path, f))]
+        for f in files:
+            #print(join(path, f))
+            remove(join(path, f))
+
 
 def get_max_bevel(arm_loc, corner_loc):
     return corner_loc - arm_loc
@@ -245,6 +255,9 @@ def create_test_support(dir_is_x: bool, flat: tuple[bool, bool], size, edge_lift
 
 
 def generate(x_size, y_size, edge_height, bevel_width, bevel_count, margin, x_amount, y_amount, edge_lift, scale):
+    
+    clean_folders([COMBINED_STL_FOLDER, INDIVIDUAL_STL_FOLDER, TEST_PRINTS_FOLDER])
+
     arm_loc_x, arm_loc_y = edit_platforms(x_size, y_size, x_amount, y_amount, edge_height, bevel_width, bevel_count, margin, scale)
     x_corner_loc = x_size/2
     y_corner_loc = y_size/2

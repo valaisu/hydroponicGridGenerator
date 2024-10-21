@@ -2,6 +2,7 @@ from stl import mesh
 import numpy as np
 import copy 
 
+import os
 from os import listdir
 from os.path import isfile, join
 import re
@@ -35,9 +36,6 @@ print(stl_files)
 print(print_counts)
 
 
-    
-
-
 def arrange(printer_dimension_x: float, printer_dimension_y: float, input_folder_path: str, output_folder_path: str, scale = 1, margin_edge: int = 0.05, margin_between: int = 0.05):
     
     if scale != 1:
@@ -46,7 +44,7 @@ def arrange(printer_dimension_x: float, printer_dimension_y: float, input_folder
         margin_between *= scale
         margin_edge *= scale
     
-    # Read all files
+    # get all files
     stl_files = [f for f in listdir(input_folder_path) if isfile(join(input_folder_path, f)) and f.endswith(".stl")]
     print_counts = extract_print_counts(stl_files)
     all_mesh = []
@@ -97,7 +95,7 @@ def arrange(printer_dimension_x: float, printer_dimension_y: float, input_folder
         print(f"saved print_{file_number}.stl")   
 
 
-arrange(20, 20, mypath, output, 10)
+#arrange(20, 20, mypath, output, 10)
 
 
 # TODO: clean folders before adding new stuff
