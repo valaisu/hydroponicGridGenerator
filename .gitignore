@@ -1,4 +1,6 @@
 /venv
-/output/
+/output/combined_stl/*
+/output/individual_stl/*
+/output/test_prints/*
 *.blend1
 /models

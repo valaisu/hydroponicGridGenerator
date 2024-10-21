@@ -33,8 +33,8 @@ The user gives width and length of their equivalent of aquarium, along with some
 - [ ] Installation guide
 - [ ] Installation scripts
 - [x] Export as stl
-- [ ] Combined stl files
-- [ ] Better file management
+- [x] Combined stl files
+- [x] Better file management
 
 ### Advanced ideas
 
